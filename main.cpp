@@ -5,7 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-
     // for mac & ubuntu: set opengl version for display
     QSurfaceFormat format;
     format.setMajorVersion(3);
