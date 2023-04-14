@@ -14,3 +14,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_actImportModel_triggered()
+{
+    QString str=QFileDialog::getOpenFileName(this, "选择模型文件", "", "OBJ (*.obj);;FBX(*.fbx);;ALL FILES( *.* ) ");
+    ui->openGLWidget->loadModel(str.toStdString());
+}
+
+
+void MainWindow::on_actWireFrame_triggered()
+{
+    ui->openGLWidget->setWireFrame(true);
+}
+
+
+void MainWindow::on_actFillColor_triggered()
+{
+    ui->openGLWidget->setWireFrame(false);
+}
+

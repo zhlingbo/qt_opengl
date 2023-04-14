@@ -34,8 +34,38 @@
      <height>36</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actImportModel"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>显示</string>
+    </property>
+    <addaction name="actWireFrame"/>
+    <addaction name="actFillColor"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actImportModel">
+   <property name="text">
+    <string>导入模型</string>
+   </property>
+  </action>
+  <action name="actWireFrame">
+   <property name="text">
+    <string>线框模式</string>
+   </property>
+  </action>
+  <action name="actFillColor">
+   <property name="text">
+    <string>着色</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
