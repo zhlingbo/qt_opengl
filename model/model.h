@@ -9,20 +9,14 @@
 #include <QOpenGLTexture>
 class Model {
 public:
+    Model(QOpenGLFunctions_3_3_Core *glfuns,const char *path);
+    void Draw(QOpenGLShaderProgram &shader);
+
     float m_maxX=-100.0;
     float m_maxY=-100.0;
     float m_minX=100.0;
     float m_minY=100.0;
     vector<Texture> textures_loaded;
-    Model(QOpenGLFunctions_3_3_Core *glfuns,const char *path) :m_glFuns(glfuns) {
-
-        loadModel(path);
-    }
-    void Draw(QOpenGLShaderProgram &shader) {
-        for(unsigned int i = 0; i < meshes.size(); i++)
-            meshes[i].Draw(shader);
-
-    }
 
 private:
     // model data

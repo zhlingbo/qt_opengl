@@ -43,12 +43,7 @@ private:
     bool m_bMouseMiddlePressed;
     QPoint m_lastPos;
 
-    QOpenGLTexture * m_diffuseTex = nullptr;
-    QOpenGLTexture * m_specularTex = nullptr;
-
-    GLuint VAO,VBO,lightVAO;
-
-    Model * m_model = nullptr;
+    Model* m_model = nullptr;
 };
 
 #endif // RENDER_H

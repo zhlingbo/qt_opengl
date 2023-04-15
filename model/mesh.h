@@ -25,11 +25,10 @@ public:
     vector<Texture> textures;
 
     void Draw(QOpenGLShaderProgram &shader);
-    Mesh(QOpenGLFunctions_3_3_Core *glFuns,
-         vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+    Mesh(QOpenGLFunctions_3_3_Core *glFuns, vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 private:
     // render data
-    unsigned int VAO, VBO, EBO;
+    unsigned int m_VAO, m_VBO, m_EBO;
     void setupMesh();
 private:
     QOpenGLFunctions_3_3_Core *m_glFuns;

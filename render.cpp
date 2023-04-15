@@ -1,29 +1,28 @@
 #include "render.h"
 
-Render::Render(QWidget* parent) : QOpenGLWidget(parent),
-  m_camera(QVector3D(5.0f, 0.0f, 10.0f))
+Render::Render(QWidget* parent)
+    : QOpenGLWidget(parent)
+    , m_camera(QVector3D(5.0f, 0.0f, 10.0f))
 {
     setFocusPolicy(Qt::StrongFocus);
 }
 
 Render::~Render()
 {
-    makeCurrent();
-    glDeleteBuffers(1,&VBO);
-    glDeleteVertexArrays(1,&VAO);
-    glDeleteVertexArrays(1,&lightVAO);
-    doneCurrent();
+    if (m_model != nullptr) {
+        delete m_model;
+        m_model = nullptr;
+    }
 }
 
 void Render::loadModel(string path)
 {
-    if(m_model !=NULL)
+    if (m_model != nullptr)
         delete m_model;
 
-    m_model=NULL;
+    m_model = nullptr;
     makeCurrent();
-    m_model=new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext())
-                ,path.c_str());
+    m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
     m_camera = Camera(cameraPosInit(m_model->m_maxY, m_model->m_minY));
     doneCurrent();
 }
@@ -46,9 +45,9 @@ void Render::initializeGL()
     bool success;
     m_ShaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,":/shaders/shapes.vert");
     m_ShaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,":/shaders/shapes.frag");
-    success=m_ShaderProgram.link();
+    success = m_ShaderProgram.link();
     if(!success)
-        qDebug()<<"ERR:"<<m_ShaderProgram.log();
+        qDebug() << "ERR:" << m_ShaderProgram.log();
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -61,23 +60,21 @@ void Render::resizeGL(int w, int h)
 void Render::paintGL()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(m_model == NULL) return;
+    if (m_model == nullptr) return;
 
     QMatrix4x4 model;
     QMatrix4x4 view;
     QMatrix4x4 projection;
-   // float time=m_time.elapsed()/50.0;
+
     projection.perspective(m_camera.getZoom(), (float)width()/height(), 0.1f, 100.0f);
     view = m_camera.getViewMatrix();
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_ShaderProgram.bind();
     m_ShaderProgram.setUniformValue("projection", projection);
     m_ShaderProgram.setUniformValue("view", view);
-    //model.rotate(time, 1.0f, 1.0f, 0.5f);
 
     m_ShaderProgram.setUniformValue("viewPos", m_camera.getPosition());
 
@@ -85,9 +82,11 @@ void Render::paintGL()
     m_ShaderProgram.setUniformValue("light.ambient", 0.4f, 0.4f, 0.4f);
     m_ShaderProgram.setUniformValue("light.diffuse", 0.9f, 0.9f, 0.9f);
     m_ShaderProgram.setUniformValue("light.specular", 1.0f, 1.0f, 1.0f);
+
     // material properties
     m_ShaderProgram.setUniformValue("material.shininess", 32.0f);
     m_ShaderProgram.setUniformValue("light.direction", -0.2f, -1.0f, -0.3f);
+
     m_ShaderProgram.setUniformValue("model", model);
     m_model->Draw(m_ShaderProgram);
 }
