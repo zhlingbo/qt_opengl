@@ -19,6 +19,7 @@ public:
 
     QMatrix4x4 getViewMatrix();
     void changeZoom(float dt);
+    void moveForward(float dt);
     void moveAround(float dx, float dy);
     void moveFlat(float dx, float dy);
     float getZoom() const;

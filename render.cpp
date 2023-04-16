@@ -23,7 +23,7 @@ void Render::loadModel(string path)
     m_model = nullptr;
     makeCurrent();
     m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
-    m_camera = Camera(cameraPosInit(m_model->m_maxY, m_model->m_minY));
+    m_camera = Camera(cameraPosInit(m_model->bbox));
     doneCurrent();
 }
 
@@ -94,7 +94,7 @@ void Render::paintGL()
 void Render::wheelEvent(QWheelEvent *event)
 {
     QPoint offset = event->angleDelta();
-    m_camera.changeZoom(-offset.y()/20.0f);
+    m_camera.changeZoom(-offset.y() / 20.0f);
     update();
 }
 
@@ -133,8 +133,8 @@ void Render::mouseMoveEvent(QMouseEvent *event)
         int xPos = event->position().toPoint().x();
         int yPos = event->position().toPoint().y();
 
-        float xoffset = (xPos - m_lastPos.x())*0.1f;
-        float yoffset = (m_lastPos.y() - yPos)*0.1f;
+        float xoffset = (xPos - m_lastPos.x()) * 0.1f;
+        float yoffset = (m_lastPos.y() - yPos) * 0.1f;
         m_lastPos = event->position().toPoint();
         m_camera.moveFlat(-xoffset, -yoffset);
     }
@@ -144,16 +144,14 @@ void Render::mouseMoveEvent(QMouseEvent *event)
 void Render::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Space)
-        m_camera = Camera(cameraPosInit(m_model->m_maxY, m_model->m_minY));
+        m_camera = Camera(cameraPosInit(m_model->bbox));
     update();
 }
 
-QVector3D Render::cameraPosInit(float maxY, float minY)
+QVector3D Render::cameraPosInit(BBox bbox)
 {
-    QVector3D temp = {0,0,0};
-    float height = maxY - minY;
-    temp.setZ(1.5 * height);
-    if (minY >= 0)
-        temp.setY(height / 2.0);
-    return temp;
+    float x = (bbox.max.x() - bbox.min.x()) / 2;
+    float y = (bbox.max.y() - bbox.min.y()) / 2;
+    float z = (bbox.max.y() - bbox.min.y()) * 2;
+    return QVector3D(x, y, z);
 }

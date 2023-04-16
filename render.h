@@ -35,7 +35,7 @@ protected:
 
 
 private:
-    QVector3D cameraPosInit(float maxY,float minY);
+    QVector3D cameraPosInit(BBox bbox);
 
     QOpenGLShaderProgram m_ShaderProgram;
     Camera m_camera;

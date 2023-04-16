@@ -4,18 +4,17 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <QOpenGLTexture>
 
 #include "mesh.h"
-#include <QOpenGLTexture>
+#include "bbox.h"
+
 class Model {
 public:
     Model(QOpenGLFunctions_3_3_Core *glfuns,const char *path);
     void Draw(QOpenGLShaderProgram &shader);
 
-    float m_maxX=-100.0;
-    float m_maxY=-100.0;
-    float m_minX=100.0;
-    float m_minY=100.0;
+    BBox bbox;
     vector<Texture> textures_loaded;
 
 private:
@@ -24,6 +23,7 @@ private:
     vector<Mesh> meshes;
     string directory;
     void loadModel(string path);
+    void setBBox();
 
     void processNode(aiNode *node, const aiScene *scene);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);

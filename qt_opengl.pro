@@ -19,6 +19,7 @@ SOURCES += \
 HEADERS += \
     camera.h \
     mainwindow.h \
+    model/bbox.h \
     model/mesh.h \
     model/model.h \
     render.h

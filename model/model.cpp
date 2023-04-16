@@ -1,8 +1,10 @@
 #include "model.h"
 
-Model::Model(QOpenGLFunctions_3_3_Core *glfuns,const char *path) : m_glFuns(glfuns)
+Model::Model(QOpenGLFunctions_3_3_Core *glfuns,const char *path)
+    : m_glFuns(glfuns)
 {
     loadModel(path);
+    setBBox();
 }
 
 void Model::Draw(QOpenGLShaderProgram &shader) {
@@ -21,6 +23,22 @@ void Model::loadModel(string path)
     }
     directory = path.substr(0, path.find_last_of('/'));
     processNode(scene->mRootNode, scene);
+}
+
+void Model::setBBox()
+{
+    bbox = meshes[0].bbox;
+    for (unsigned int i = 1; i < meshes.size(); i++) {
+        QVector3D& meshMax = meshes[i].bbox.max;
+        if (bbox.max.x() < meshMax.x()) bbox.max.setX(meshMax.x());
+        if (bbox.max.y() < meshMax.y()) bbox.max.setY(meshMax.y());
+        if (bbox.max.z() < meshMax.z()) bbox.max.setZ(meshMax.z());
+
+        QVector3D& meshMin = meshes[i].bbox.min;
+        if (bbox.min.x() > meshMin.x()) bbox.min.setX(meshMin.x());
+        if (bbox.min.y() > meshMin.y()) bbox.min.setY(meshMin.y());
+        if (bbox.min.z() > meshMin.z()) bbox.min.setZ(meshMin.z());
+    }
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene)
@@ -42,10 +60,14 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     vector<unsigned int> indices;
     vector<Texture> textures;
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        if (m_maxX<mesh->mVertices[i].x) m_maxX=mesh->mVertices[i].x;
-        if (m_maxY<mesh->mVertices[i].y) m_maxY=mesh->mVertices[i].y;
-        if (m_minX>mesh->mVertices[i].x) m_minX=mesh->mVertices[i].x;
-        if (m_minY>mesh->mVertices[i].y) m_minY=mesh->mVertices[i].y;
+        if (bbox.max.x() < mesh->mVertices[i].x) bbox.max.setX(mesh->mVertices[i].x);
+        if (bbox.max.y() < mesh->mVertices[i].y) bbox.max.setY(mesh->mVertices[i].y);
+        if (bbox.max.z() < mesh->mVertices[i].z) bbox.max.setZ(mesh->mVertices[i].z);
+
+        if (bbox.min.x() > mesh->mVertices[i].x) bbox.min.setX(mesh->mVertices[i].x);
+        if (bbox.min.y() > mesh->mVertices[i].y) bbox.min.setY(mesh->mVertices[i].y);
+        if (bbox.min.z() > mesh->mVertices[i].z) bbox.min.setZ(mesh->mVertices[i].z);
+
         Vertex vertex;
         // 处理顶点位置、法线和纹理坐标
         QVector3D vector;
@@ -88,8 +110,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
                 loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
-    return Mesh(m_glFuns,vertices, indices, textures);
-
+    return Mesh(m_glFuns, vertices, indices, textures);
 }
 
 vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName)

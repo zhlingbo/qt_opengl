@@ -7,6 +7,7 @@ Mesh::Mesh(QOpenGLFunctions_3_3_Core *glFuns, vector<Vertex> vertices, vector<un
     , m_glFuns(glFuns)
 {
     setupMesh();
+    setBBox();
 }
 
 void Mesh::setupMesh()
@@ -36,19 +37,34 @@ void Mesh::setupMesh()
     m_glFuns->glEnableVertexAttribArray(2);
 }
 
+void Mesh::setBBox()
+{
+    bbox.max = bbox.min = vertices[0].Position;
+    for (unsigned int i = 1; i < vertices.size(); i++) {
+        if (bbox.max.x() < vertices[i].Position.x()) bbox.max.setX(vertices[i].Position.x());
+        if (bbox.max.y() < vertices[i].Position.y()) bbox.max.setY(vertices[i].Position.y());
+        if (bbox.max.z() < vertices[i].Position.z()) bbox.max.setZ(vertices[i].Position.z());
+
+        if (bbox.min.x() > vertices[i].Position.x()) bbox.min.setX(vertices[i].Position.x());
+        if (bbox.min.y() > vertices[i].Position.y()) bbox.min.setY(vertices[i].Position.y());
+        if (bbox.min.z() > vertices[i].Position.z()) bbox.min.setZ(vertices[i].Position.z());
+    }
+}
+
 
 void Mesh::Draw(QOpenGLShaderProgram &shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
-    for(unsigned int i = 0; i < textures.size(); i++) {
+    for (unsigned int i = 0; i < textures.size(); i++) {
         m_glFuns->glActiveTexture(GL_TEXTURE0 + i);
         string number;
         string name = textures[i].type;
-        if(name == "texture_diffuse")
+        if (name == "texture_diffuse") {
             number = std::to_string(diffuseNr++);
-        else if(name == "texture_specular")
+        } else if (name == "texture_specular") {
             number = std::to_string(specularNr++);
+        }
 
         shader.setUniformValue(("material." + name + number).c_str(), i);
         m_glFuns->glBindTexture(GL_TEXTURE_2D, textures[i].id);

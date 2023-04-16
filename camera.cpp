@@ -35,6 +35,12 @@ void Camera::changeZoom(float dt)
         this->zoom = 1.0f;
 }
 
+void Camera::moveForward(float dt)
+{
+    this->position = this->position + this->front * dt;
+    this->updateCameraVectors();
+}
+
 void Camera::moveAround(float dx, float dy)
 {
     QVector3D roundR = this->position - this->viewOrigin;
