@@ -38,6 +38,38 @@ void Render::setWireFrame(bool isWireFrame)
     update();
 }
 
+void Render::setLight(unsigned int lightMode)
+{
+    m_ShaderProgram.bind();
+    if (lightMode == DirectLight) {
+        m_ShaderProgram.setUniformValue("dirLight.ambient", 0.4f, 0.4f, 0.4f);
+        m_ShaderProgram.setUniformValue("dirLight.diffuse", 0.9f, 0.9f, 0.9f);
+        m_ShaderProgram.setUniformValue("dirLight.specular", 1.0f, 1.0f, 1.0f);
+
+        m_ShaderProgram.setUniformValue("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    }
+    if (lightMode == PointLight) {
+        m_ShaderProgram.setUniformValue("pointLight.ambient", 0.4f, 0.4f, 0.4f);
+        m_ShaderProgram.setUniformValue("pointLight.diffuse", 0.9f, 0.9f, 0.9f);
+        m_ShaderProgram.setUniformValue("pointLight.specular", 1.0f, 1.0f, 1.0f);
+
+        m_ShaderProgram.setUniformValue("pointLight.constant", 1.0f);
+        m_ShaderProgram.setUniformValue("pointLight.linear", 0.09f);
+        m_ShaderProgram.setUniformValue("pointLight.quadratic", 0.032f);
+
+        m_ShaderProgram.setUniformValue("pointLight.position", QVector4D(m_model->bbox.max, 1.0f));
+    }
+    update();
+}
+
+void Render::clearLight()
+{
+    m_ShaderProgram.bind();
+    m_ShaderProgram.setUniformValue("dirLight.direction", QVector3D());
+    m_ShaderProgram.setUniformValue("pointLight.position", QVector4D());
+    update();
+}
+
 void Render::initializeGL()
 {
     initializeOpenGLFunctions();
@@ -78,18 +110,8 @@ void Render::paintGL()
 
     m_ShaderProgram.setUniformValue("viewPos", QVector4D(m_camera.getPosition(), 1.0f));
 
-    m_ShaderProgram.setUniformValue("pointLight.ambient", 0.4f, 0.4f, 0.4f);
-    m_ShaderProgram.setUniformValue("pointLight.diffuse", 0.9f, 0.9f, 0.9f);
-    m_ShaderProgram.setUniformValue("pointLight.specular", 1.0f, 1.0f, 1.0f);
-
-    m_ShaderProgram.setUniformValue("pointLight.constant", 1.0f);
-    m_ShaderProgram.setUniformValue("pointLight.linear", 0.09f);
-    m_ShaderProgram.setUniformValue("pointLight.quadratic", 0.032f);
-
     // material properties
     m_ShaderProgram.setUniformValue("material.shininess", 32.0f);
-    // m_ShaderProgram.setUniformValue("dirLight.direction", -0.2f, -1.0f, -0.3f);
-    m_ShaderProgram.setUniformValue("pointLight.position", QVector4D(m_model->bbox.max, 1.0f));
 
     m_ShaderProgram.setUniformValue("model", model);
     m_model->Draw(m_ShaderProgram);

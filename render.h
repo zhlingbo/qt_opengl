@@ -20,6 +20,13 @@ public:
 
     void loadModel(string path);
     void setWireFrame(bool isWireFrame);
+    void setLight(unsigned int lightMode);
+    void clearLight();
+
+    enum LightMode {
+        DirectLight,
+        PointLight
+    };
 
 protected:
     void initializeGL() override;

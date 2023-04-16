@@ -33,3 +33,21 @@ void MainWindow::on_actFillColor_triggered()
     ui->openGLWidget->setWireFrame(false);
 }
 
+
+void MainWindow::on_actPointLight_triggered()
+{
+    ui->openGLWidget->setLight(Render::PointLight);
+}
+
+
+void MainWindow::on_actDirectLight_triggered()
+{
+    ui->openGLWidget->setLight(Render::DirectLight);
+}
+
+
+void MainWindow::on_actLightOff_triggered()
+{
+    ui->openGLWidget->clearLight();
+}
+
