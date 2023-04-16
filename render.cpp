@@ -76,16 +76,20 @@ void Render::paintGL()
     m_ShaderProgram.setUniformValue("projection", projection);
     m_ShaderProgram.setUniformValue("view", view);
 
-    m_ShaderProgram.setUniformValue("viewPos", m_camera.getPosition());
+    m_ShaderProgram.setUniformValue("viewPos", QVector4D(m_camera.getPosition(), 1.0f));
 
-    // light properties, note that all light colors are set at full intensity
-    m_ShaderProgram.setUniformValue("light.ambient", 0.4f, 0.4f, 0.4f);
-    m_ShaderProgram.setUniformValue("light.diffuse", 0.9f, 0.9f, 0.9f);
-    m_ShaderProgram.setUniformValue("light.specular", 1.0f, 1.0f, 1.0f);
+    m_ShaderProgram.setUniformValue("pointLight.ambient", 0.4f, 0.4f, 0.4f);
+    m_ShaderProgram.setUniformValue("pointLight.diffuse", 0.9f, 0.9f, 0.9f);
+    m_ShaderProgram.setUniformValue("pointLight.specular", 1.0f, 1.0f, 1.0f);
+
+    m_ShaderProgram.setUniformValue("pointLight.constant", 1.0f);
+    m_ShaderProgram.setUniformValue("pointLight.linear", 0.09f);
+    m_ShaderProgram.setUniformValue("pointLight.quadratic", 0.032f);
 
     // material properties
     m_ShaderProgram.setUniformValue("material.shininess", 32.0f);
-    m_ShaderProgram.setUniformValue("light.direction", -0.2f, -1.0f, -0.3f);
+    // m_ShaderProgram.setUniformValue("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    m_ShaderProgram.setUniformValue("pointLight.position", QVector4D(m_model->bbox.max, 1.0f));
 
     m_ShaderProgram.setUniformValue("model", model);
     m_model->Draw(m_ShaderProgram);

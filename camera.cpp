@@ -21,7 +21,7 @@ Camera::~Camera()
 QMatrix4x4 Camera::getViewMatrix()
 {
     QMatrix4x4 view;
-    view.lookAt(this->position, this->viewOrigin, this->up);
+    view.lookAt(this->position, this->position + this->front, this->up);
     return view;
 }
 
@@ -53,6 +53,7 @@ void Camera::moveFlat(float dx, float dy)
     QVector3D dp = this->up * dy + this->right * dx;
     this->position = this->position + dp;
     this->viewOrigin = this->viewOrigin + dp;
+    this->updateCameraVectors();
 }
 
 float Camera::getZoom() const
