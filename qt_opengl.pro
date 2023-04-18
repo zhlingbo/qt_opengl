@@ -21,6 +21,7 @@ HEADERS += \
     camera.h \
     dockwidgets/lightsettingwidget.h \
     lights/directionlight.h \
+    lights/pointlight.h \
     mainwindow.h \
     model/bbox.h \
     model/mesh.h \

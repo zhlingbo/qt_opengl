@@ -17,6 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(lightSettingWidget, &LightSettingWidget::direction_y_changed, ui->openGLWidget, &Render::dirLight_y);
     connect(lightSettingWidget, &LightSettingWidget::direction_z_changed, ui->openGLWidget, &Render::dirLight_z);
 
+    connect(lightSettingWidget, &LightSettingWidget::point_light_opened, ui->openGLWidget, &Render::pointLightOpenedSlot);
+    connect(lightSettingWidget, &LightSettingWidget::strength_specular_value_point, ui->openGLWidget, &Render::pointLightStrengthSpecular);
+    connect(lightSettingWidget, &LightSettingWidget::strength_diffuse_value_point, ui->openGLWidget, &Render::pointLightStrengthDiffuse);
+    connect(lightSettingWidget, &LightSettingWidget::strength_ambient_value_point, ui->openGLWidget, &Render::pointLightStrengthAmbient);
+
     ui->dockWidget->hide();
 }
 
@@ -42,24 +47,6 @@ void MainWindow::on_actWireFrame_triggered()
 void MainWindow::on_actFillColor_triggered()
 {
     ui->openGLWidget->setWireFrame(false);
-}
-
-
-void MainWindow::on_actPointLight_triggered()
-{
-    ui->openGLWidget->setLight(Render::PointLight);
-}
-
-
-void MainWindow::on_actDirectLight_triggered()
-{
-    ui->openGLWidget->setLight(Render::DirectLight);
-}
-
-
-void MainWindow::on_actLightOff_triggered()
-{
-    ui->openGLWidget->clearLight();
 }
 
 

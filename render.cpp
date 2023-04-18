@@ -17,13 +17,17 @@ Render::~Render()
 
 void Render::loadModel(string path)
 {
-    if (m_model != nullptr)
+    if (m_model != nullptr) {
         delete m_model;
-
-    m_model = nullptr;
+        m_model = nullptr;
+    }
     makeCurrent();
+
     m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
+
     m_camera = Camera(cameraPosInit(m_model->bbox));
+    pointLight.position = QVector4D(m_model->bbox.max, 1.0f);
+
     doneCurrent();
 }
 
@@ -35,35 +39,6 @@ void Render::setWireFrame(bool isWireFrame)
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     doneCurrent();
-    update();
-}
-
-void Render::setLight(unsigned int lightMode)
-{
-    m_ShaderProgram.bind();
-    if (lightMode == DirectLight) {
-
-        m_ShaderProgram.setUniformValue("dirLight.direction", directionLight.direction);
-    }
-    if (lightMode == PointLight) {
-        m_ShaderProgram.setUniformValue("pointLight.ambient", 0.4f, 0.4f, 0.4f);
-        m_ShaderProgram.setUniformValue("pointLight.diffuse", 0.9f, 0.9f, 0.9f);
-        m_ShaderProgram.setUniformValue("pointLight.specular", 1.0f, 1.0f, 1.0f);
-
-        m_ShaderProgram.setUniformValue("pointLight.constant", 1.0f);
-        m_ShaderProgram.setUniformValue("pointLight.linear", 0.09f);
-        m_ShaderProgram.setUniformValue("pointLight.quadratic", 0.032f);
-
-        m_ShaderProgram.setUniformValue("pointLight.position", QVector4D(m_model->bbox.max, 1.0f));
-    }
-    update();
-}
-
-void Render::clearLight()
-{
-    m_ShaderProgram.bind();
-    m_ShaderProgram.setUniformValue("dirLight.direction", QVector3D());
-    m_ShaderProgram.setUniformValue("pointLight.position", QVector4D());
     update();
 }
 
@@ -107,14 +82,27 @@ void Render::paintGL()
 
     m_ShaderProgram.setUniformValue("viewPos", QVector4D(m_camera.getPosition(), 1.0f));
 
-    if (directionLight.opened)
+    if (directionLight.opened) {
         m_ShaderProgram.setUniformValue("dirLight.direction", directionLight.direction);
-    else
+        m_ShaderProgram.setUniformValue("dirLight.ambient", directionLight.strength_ambient * directionLight.color);
+        m_ShaderProgram.setUniformValue("dirLight.diffuse", directionLight.strength_diffuse * directionLight.color);
+        m_ShaderProgram.setUniformValue("dirLight.specular", directionLight.strength_specular * directionLight.color);
+    } else {
         m_ShaderProgram.setUniformValue("dirLight.direction", QVector3D());
+    }
 
-    m_ShaderProgram.setUniformValue("dirLight.ambient", directionLight.strength_ambient * directionLight.color);
-    m_ShaderProgram.setUniformValue("dirLight.diffuse", directionLight.strength_diffuse * directionLight.color);
-    m_ShaderProgram.setUniformValue("dirLight.specular", directionLight.strength_specular * directionLight.color);
+    if (pointLight.opened) {
+        m_ShaderProgram.setUniformValue("pointLight.position", pointLight.position);
+        m_ShaderProgram.setUniformValue("pointLight.ambient", pointLight.strength_ambient * pointLight.color);
+        m_ShaderProgram.setUniformValue("pointLight.diffuse", pointLight.strength_diffuse * pointLight.color);
+        m_ShaderProgram.setUniformValue("pointLight.specular", pointLight.strength_specular * pointLight.color);
+
+        m_ShaderProgram.setUniformValue("pointLight.constant", pointLight.constant);
+        m_ShaderProgram.setUniformValue("pointLight.linear", pointLight.linear);
+        m_ShaderProgram.setUniformValue("pointLight.quadratic", pointLight.quadratic);
+    } else {
+        m_ShaderProgram.setUniformValue("pointLight.position", QVector4D());
+    }
 
     // material properties
     m_ShaderProgram.setUniformValue("material.shininess", 32.0f);
@@ -227,5 +215,29 @@ void Render::dirLight_y(float y)
 void Render::dirLight_z(float z)
 {
     directionLight.direction.setZ(z);
+    update();
+}
+
+void Render::pointLightOpenedSlot(bool opened)
+{
+    pointLight.opened = opened;
+    update();
+}
+
+void Render::pointLightStrengthSpecular(float strength)
+{
+    pointLight.strength_specular = strength;
+    update();
+}
+
+void Render::pointLightStrengthDiffuse(float strength)
+{
+    pointLight.strength_diffuse = strength;
+    update();
+}
+
+void Render::pointLightStrengthAmbient(float strength)
+{
+    pointLight.strength_ambient = strength;
     update();
 }

@@ -12,6 +12,7 @@
 #include "camera.h"
 #include "model/model.h"
 #include "lights/directionlight.h"
+#include "lights/pointlight.h"
 
 class Render : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
@@ -21,13 +22,6 @@ public:
 
     void loadModel(string path);
     void setWireFrame(bool isWireFrame);
-    void setLight(unsigned int lightMode);
-    void clearLight();
-
-    enum LightMode {
-        DirectLight,
-        PointLight
-    };
 
 protected:
     void initializeGL() override;
@@ -54,6 +48,7 @@ private:
     Model* m_model = nullptr;
 
     DirectionLight directionLight;
+    PointLight pointLight;
 
 public slots:
     void dirLightOpenedSlot(bool opened);
@@ -63,6 +58,11 @@ public slots:
     void dirLight_x(float x);
     void dirLight_y(float y);
     void dirLight_z(float z);
+
+    void pointLightOpenedSlot(bool opened);
+    void pointLightStrengthSpecular(float strength);
+    void pointLightStrengthDiffuse(float strength);
+    void pointLightStrengthAmbient(float strength);
 };
 
 #endif // RENDER_H

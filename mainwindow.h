@@ -25,12 +25,6 @@ private slots:
 
     void on_actFillColor_triggered();
 
-    void on_actPointLight_triggered();
-
-    void on_actDirectLight_triggered();
-
-    void on_actLightOff_triggered();
-
     void on_actLightSetting_triggered();
 
 private:

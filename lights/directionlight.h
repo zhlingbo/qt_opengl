@@ -21,8 +21,4 @@ struct DirectionLight {
     {}
 };
 
-struct PointLight {
-    QVector3D color;
-};
-
 #endif // DIRECTIONLIGHT_H

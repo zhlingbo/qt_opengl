@@ -51,9 +51,6 @@
     <property name="title">
      <string>光照</string>
     </property>
-    <addaction name="actPointLight"/>
-    <addaction name="actDirectLight"/>
-    <addaction name="actLightOff"/>
     <addaction name="actLightSetting"/>
    </widget>
    <addaction name="menu"/>
@@ -89,21 +86,6 @@
   <action name="actFillColor">
    <property name="text">
     <string>着色</string>
-   </property>
-  </action>
-  <action name="actPointLight">
-   <property name="text">
-    <string>点光源</string>
-   </property>
-  </action>
-  <action name="actDirectLight">
-   <property name="text">
-    <string>平行光</string>
-   </property>
-  </action>
-  <action name="actLightOff">
-   <property name="text">
-    <string>关灯</string>
    </property>
   </action>
   <action name="actLightSetting">

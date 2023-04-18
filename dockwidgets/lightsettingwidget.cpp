@@ -57,3 +57,30 @@ void LightSettingWidget::on_dz_valueChanged(double arg1)
     emit direction_z_changed(arg1);
 }
 
+
+void LightSettingWidget::on_opened_point_stateChanged(int arg1)
+{
+    if (arg1 == Qt::Checked)
+        emit point_light_opened(true);
+    else
+        emit point_light_opened(false);
+}
+
+
+void LightSettingWidget::on_strength_specular_point_valueChanged(int value)
+{
+    emit strength_specular_value_point(value / 100.0f);
+}
+
+
+void LightSettingWidget::on_strength_diffuse_point_valueChanged(int value)
+{
+    emit strength_diffuse_value_point(value / 100.0f);
+}
+
+
+void LightSettingWidget::on_strength_ambient_point_valueChanged(int value)
+{
+    emit strength_ambient_value_point(value / 100.0f);
+}
+
