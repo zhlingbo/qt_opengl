@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QFileDialog>
 
+#include "dockwidgets/lightsettingwidget.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -29,7 +31,10 @@ private slots:
 
     void on_actLightOff_triggered();
 
+    void on_actLightSetting_triggered();
+
 private:
     Ui::MainWindow *ui;
+    LightSettingWidget *lightSettingWidget;
 };
 #endif // MAINWINDOW_H

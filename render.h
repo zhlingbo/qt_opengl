@@ -11,6 +11,7 @@
 
 #include "camera.h"
 #include "model/model.h"
+#include "lights/directionlight.h"
 
 class Render : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
@@ -51,6 +52,17 @@ private:
     QPoint m_lastPos;
 
     Model* m_model = nullptr;
+
+    DirectionLight directionLight;
+
+public slots:
+    void dirLightOpenedSlot(bool opened);
+    void dirLightStrengthSpecular(float strength);
+    void dirLightStrengthDiffuse(float strength);
+    void dirLightStrengthAmbient(float strength);
+    void dirLight_x(float x);
+    void dirLight_y(float y);
+    void dirLight_z(float z);
 };
 
 #endif // RENDER_H

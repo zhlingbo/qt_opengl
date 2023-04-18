@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     camera.cpp \
+    dockwidgets/lightsettingwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     model/mesh.cpp \
@@ -18,6 +19,8 @@ SOURCES += \
 
 HEADERS += \
     camera.h \
+    dockwidgets/lightsettingwidget.h \
+    lights/directionlight.h \
     mainwindow.h \
     model/bbox.h \
     model/mesh.h \
@@ -25,6 +28,7 @@ HEADERS += \
     render.h
 
 FORMS += \
+    dockwidgets/lightsettingwidget.ui \
     mainwindow.ui
 
 # Default rules for deployment.

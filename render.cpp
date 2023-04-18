@@ -42,11 +42,8 @@ void Render::setLight(unsigned int lightMode)
 {
     m_ShaderProgram.bind();
     if (lightMode == DirectLight) {
-        m_ShaderProgram.setUniformValue("dirLight.ambient", 0.4f, 0.4f, 0.4f);
-        m_ShaderProgram.setUniformValue("dirLight.diffuse", 0.9f, 0.9f, 0.9f);
-        m_ShaderProgram.setUniformValue("dirLight.specular", 1.0f, 1.0f, 1.0f);
 
-        m_ShaderProgram.setUniformValue("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        m_ShaderProgram.setUniformValue("dirLight.direction", directionLight.direction);
     }
     if (lightMode == PointLight) {
         m_ShaderProgram.setUniformValue("pointLight.ambient", 0.4f, 0.4f, 0.4f);
@@ -91,8 +88,8 @@ void Render::resizeGL(int w, int h)
 
 void Render::paintGL()
 {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (m_model == nullptr) return;
@@ -109,6 +106,15 @@ void Render::paintGL()
     m_ShaderProgram.setUniformValue("view", view);
 
     m_ShaderProgram.setUniformValue("viewPos", QVector4D(m_camera.getPosition(), 1.0f));
+
+    if (directionLight.opened)
+        m_ShaderProgram.setUniformValue("dirLight.direction", directionLight.direction);
+    else
+        m_ShaderProgram.setUniformValue("dirLight.direction", QVector3D());
+
+    m_ShaderProgram.setUniformValue("dirLight.ambient", directionLight.strength_ambient * directionLight.color);
+    m_ShaderProgram.setUniformValue("dirLight.diffuse", directionLight.strength_diffuse * directionLight.color);
+    m_ShaderProgram.setUniformValue("dirLight.specular", directionLight.strength_specular * directionLight.color);
 
     // material properties
     m_ShaderProgram.setUniformValue("material.shininess", 32.0f);
@@ -180,4 +186,46 @@ QVector3D Render::cameraPosInit(BBox bbox)
     float y = (bbox.max.y() - bbox.min.y()) / 2;
     float z = (bbox.max.y() - bbox.min.y()) * 2;
     return QVector3D(x, y, z);
+}
+
+void Render::dirLightOpenedSlot(bool opened)
+{
+    directionLight.opened = opened;
+    update();
+}
+
+void Render::dirLightStrengthSpecular(float strength)
+{
+    directionLight.strength_specular = strength;
+    update();
+}
+
+void Render::dirLightStrengthDiffuse(float strength)
+{
+    directionLight.strength_diffuse = strength;
+    update();
+}
+
+void Render::dirLightStrengthAmbient(float strength)
+{
+    directionLight.strength_ambient = strength;
+    update();
+}
+
+void Render::dirLight_x(float x)
+{
+    directionLight.direction.setX(x);
+    update();
+}
+
+void Render::dirLight_y(float y)
+{
+    directionLight.direction.setY(y);
+    update();
+}
+
+void Render::dirLight_z(float z)
+{
+    directionLight.direction.setZ(z);
+    update();
 }

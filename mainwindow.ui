@@ -54,12 +54,28 @@
     <addaction name="actPointLight"/>
     <addaction name="actDirectLight"/>
     <addaction name="actLightOff"/>
+    <addaction name="actLightSetting"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_3"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="minimumSize">
+    <size>
+     <width>350</width>
+     <height>38</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents"/>
+  </widget>
   <action name="actImportModel">
    <property name="text">
     <string>导入模型</string>
@@ -88,6 +104,11 @@
   <action name="actLightOff">
    <property name="text">
     <string>关灯</string>
+   </property>
+  </action>
+  <action name="actLightSetting">
+   <property name="text">
+    <string>灯光设置</string>
    </property>
   </action>
  </widget>
