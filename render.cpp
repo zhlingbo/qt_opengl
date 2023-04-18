@@ -1,9 +1,13 @@
 #include "render.h"
+#include <random>
+#include <math.h>
 
 Render::Render(QWidget* parent)
     : QOpenGLWidget(parent)
     , m_camera(QVector3D(5.0f, 0.0f, 10.0f))
 {
+    lightRotateTimer = new QTimer(this);
+    connect(lightRotateTimer, &QTimer::timeout, this, &Render::light_rotate_timeout);
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -12,6 +16,10 @@ Render::~Render()
     if (m_model != nullptr) {
         delete m_model;
         m_model = nullptr;
+    }
+    if (lightRotateTimer != nullptr) {
+        delete lightRotateTimer;
+        lightRotateTimer = nullptr;
     }
 }
 
@@ -176,6 +184,19 @@ QVector3D Render::cameraPosInit(BBox bbox)
     return QVector3D(x, y, z);
 }
 
+void Render::light_rotate_timeout()
+{
+    QMatrix4x4 rotateMatX;
+    rotateMatX.rotate(1.0f, 1.0, 0.0, 0.0);
+    QMatrix4x4 rotateMatY;
+    rotateMatY.rotate(2.0f, 0.0, 1.0, 0.0);
+    QMatrix4x4 rotateMatZ;
+    rotateMatZ.rotate(3.0f, 0.0, 0.0, 1.0);
+    pointLight.position = rotateMatZ * rotateMatY * rotateMatX * pointLight.position;
+
+    update();
+}
+
 void Render::dirLightOpenedSlot(bool opened)
 {
     directionLight.opened = opened;
@@ -240,4 +261,12 @@ void Render::pointLightStrengthAmbient(float strength)
 {
     pointLight.strength_ambient = strength;
     update();
+}
+
+void Render::pointLightRotate(bool rotate)
+{
+    if (rotate)
+        lightRotateTimer->start(timeoutmSec);
+    else
+        lightRotateTimer->stop();
 }

@@ -28,6 +28,7 @@ signals:
     void strength_specular_value_point(float);
     void strength_diffuse_value_point(float);
     void strength_ambient_value_point(float);
+    void point_light_rotate(bool);
 
 private slots:
     void on_opened_stateChanged(int opened);
@@ -51,6 +52,8 @@ private slots:
     void on_strength_diffuse_point_valueChanged(int value);
 
     void on_strength_ambient_point_valueChanged(int value);
+
+    void on_rotate_light_point_stateChanged(int arg1);
 
 private:
     Ui::LightSettingWidget *ui;

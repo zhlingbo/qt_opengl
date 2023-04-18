@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(lightSettingWidget, &LightSettingWidget::strength_diffuse_value_point, ui->openGLWidget, &Render::pointLightStrengthDiffuse);
     connect(lightSettingWidget, &LightSettingWidget::strength_ambient_value_point, ui->openGLWidget, &Render::pointLightStrengthAmbient);
 
+    connect(lightSettingWidget, &LightSettingWidget::point_light_rotate, ui->openGLWidget, &Render::pointLightRotate);
+
     ui->dockWidget->hide();
 }
 

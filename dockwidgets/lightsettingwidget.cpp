@@ -84,3 +84,12 @@ void LightSettingWidget::on_strength_ambient_point_valueChanged(int value)
     emit strength_ambient_value_point(value / 100.0f);
 }
 
+
+void LightSettingWidget::on_rotate_light_point_stateChanged(int arg1)
+{
+    if (arg1 == Qt::Checked)
+        emit point_light_rotate(true);
+    else
+        emit point_light_rotate(false);
+}
+

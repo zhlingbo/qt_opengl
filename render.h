@@ -8,6 +8,7 @@
 #include <QOpenGLTexture>
 #include <QWheelEvent>
 #include <QMouseEvent>
+#include <QTimer>
 
 #include "camera.h"
 #include "model/model.h"
@@ -50,6 +51,13 @@ private:
     DirectionLight directionLight;
     PointLight pointLight;
 
+    // bool isPointLightRotate;
+    QTimer* lightRotateTimer = nullptr;
+    const unsigned int timeoutmSec = 50;
+
+private slots:
+    void light_rotate_timeout();
+
 public slots:
     void dirLightOpenedSlot(bool opened);
     void dirLightStrengthSpecular(float strength);
@@ -63,6 +71,7 @@ public slots:
     void pointLightStrengthSpecular(float strength);
     void pointLightStrengthDiffuse(float strength);
     void pointLightStrengthAmbient(float strength);
+    void pointLightRotate(bool rotate);
 };
 
 #endif // RENDER_H

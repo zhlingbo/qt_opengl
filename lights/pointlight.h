@@ -5,10 +5,10 @@
 #include <QVector4D>
 
 struct PointLight {
-    QVector3D color;
+    QVector4D position;
     bool opened;
 
-    QVector4D position;
+    QVector3D color;
 
     float strength_specular;
     float strength_diffuse;
