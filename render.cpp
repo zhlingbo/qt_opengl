@@ -31,8 +31,10 @@ void Render::loadModel(string path)
     }
     makeCurrent();
 
-    m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
+    // Qt6.2+
+    // m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
 
+    m_model = new Model(QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>(), path.c_str());
     m_camera = Camera(cameraPosInit(m_model->bbox));
     pointLight.position = QVector4D(m_model->bbox.max, 1.0f);
 
@@ -71,7 +73,7 @@ void Render::resizeGL(int w, int h)
 
 void Render::paintGL()
 {
-    // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+//    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -130,11 +132,12 @@ void Render::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::RightButton) {
         m_bMouseRightPressed = true;
-        m_lastPos = event->position().toPoint();
+//        m_lastPos = event->position().toPoint();
+        m_lastPos = event->pos();
     }
     if (event->button() == Qt::MiddleButton) {
         m_bMouseMiddlePressed = true;
-        m_lastPos = event->position().toPoint();
+        m_lastPos = event->pos();
     }
 }
 
@@ -149,21 +152,21 @@ void Render::mouseReleaseEvent(QMouseEvent *event)
 void Render::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_bMouseRightPressed) {
-        int xPos = event->position().toPoint().x();
-        int yPos = event->position().toPoint().y();
+        int xPos = event->pos().x();
+        int yPos = event->pos().y();
 
         float xoffset = xPos - m_lastPos.x();
         float yoffset = m_lastPos.y() - yPos;
-        m_lastPos = event->position().toPoint();
+        m_lastPos = event->pos();
         m_camera.moveAround(-xoffset, -yoffset);
     }
     if (m_bMouseMiddlePressed) {
-        int xPos = event->position().toPoint().x();
-        int yPos = event->position().toPoint().y();
+        int xPos = event->pos().x();
+        int yPos = event->pos().y();
 
         float xoffset = (xPos - m_lastPos.x()) * 0.1f;
         float yoffset = (m_lastPos.y() - yPos) * 0.1f;
-        m_lastPos = event->position().toPoint();
+        m_lastPos = event->pos();
         m_camera.moveFlat(-xoffset, -yoffset);
     }
     update();

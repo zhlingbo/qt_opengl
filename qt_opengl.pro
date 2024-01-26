@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets openglwidgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
@@ -38,9 +38,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 macx: LIBS += -L$$PWD/lib/ -lassimp.5
+win32: LIBS += -L$$PWD/lib/ -lassimp-vc141-mt
 
 INCLUDEPATH += $$PWD/include
-DEPENDPATH += $$PWD/include
+DEPENDPATH += $$PWD/lib
 
 RESOURCES += \
     images/images.qrc \
