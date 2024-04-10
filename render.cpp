@@ -32,9 +32,10 @@ void Render::loadModel(string path)
     makeCurrent();
 
     // Qt6.2+
-    // m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
+    m_model = new Model(QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_3_3_Core>(QOpenGLContext::currentContext()), path.c_str());
 
-    m_model = new Model(QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>(), path.c_str());
+    // Qt5.x
+    // m_model = new Model(QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>(), path.c_str());
     m_camera = Camera(cameraPosInit(m_model->bbox));
     pointLight.position = QVector4D(m_model->bbox.max, 1.0f);
 

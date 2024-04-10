@@ -3,7 +3,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Core>
-//#include <QOpenGLVersionFunctionsFactory>
+#include <QOpenGLVersionFunctionsFactory>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 #include <QWheelEvent>

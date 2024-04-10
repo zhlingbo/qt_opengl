@@ -3,4 +3,4 @@ learn OpenGL with Qt
 
 this project records the learning result
 
-Qt version: 5.12.12
+Qt version used: 6.x
